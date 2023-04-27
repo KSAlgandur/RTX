@@ -14,11 +14,16 @@ int main()
     // //std::cout <<"Определитель равен "<< m3.det();
     // std::cout <<"отбратная матрица равна "<< m3.inverse();
 
-    Matrix<double,3,3> m1({{{1,1,1},{1,1,1},{1,1,1}}});
-    Matrix<double,3,1> m2({{{0},{0},{0}}});
+    // Matrix<double,3,3> m1({{{1,1,1},{1,1,1},{1,1,1}}});
+    // Matrix<double,3,1> m2({{{0},{0},{0}}});ю.
+    Matrix<double, 3, 3> m1{{1, 2, 3}, {2, 3, 4}, {3, 5, 6}};
+    Matrix<double, 3, 3> m2{{1, 2, 3}, {2, 3, 4}, {3, 5, 6}};
+
+    std::cout << m1 * m2;
     
-    m1.x_RotMatrix(30);
-    std::cout << m1;
+    // m1.z_RotMatrix(30);
+    // //m1.x_RotMatrix(30);
+    // std::cout << m1;
     
     return 0;
 }

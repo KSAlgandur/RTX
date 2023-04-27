@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/brlk/VSCode_files/RTX/build",
+  "command": "/usr/bin/c++ -I/home/brlk/VSCode_files/RTX/LinearAlg_libs -g -o CMakeFiles/rtx.dir/main.cpp.o -c /home/brlk/VSCode_files/RTX/main.cpp",
+  "file": "/home/brlk/VSCode_files/RTX/main.cpp"
+}
+]
