@@ -15,12 +15,13 @@
 template <typename T, size_t Rows, size_t Colums>
 class Matrix
 {
-private:
+protected:
     std::array<std::array<T, Colums>, Rows> data;
     int row;
     int col;
 
 public:
+
     // Конструкторы
     ~Matrix() = default;
     Matrix(std::array<std::array<T, Colums>, Rows> &&d);
@@ -422,7 +423,5 @@ Matrix<T, Rows_1, Colums_2> operator*(const Matrix<T, Rows_1, Colums_1> &m1, con
     return res;
 }
 
-typedef Matrix<double, 3, 1> Vector3_col;
-typedef Matrix<double, 1, 3> Vector3_row;
 
 #endif

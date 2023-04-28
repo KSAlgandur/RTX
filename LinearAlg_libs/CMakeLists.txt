@@ -1,1 +1,1 @@
-set(HEADERS Matrix.hpp,Ray.hpp)
+set(HEADERS Matrix.hpp,Ray.hpp,Shapers.hpp)
