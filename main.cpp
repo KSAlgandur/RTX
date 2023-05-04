@@ -1,5 +1,7 @@
-#include "Mat_types.hpp"
 
+// #include "Shapes.hpp"
+#include "LinearAlg_libs/Shapes.hpp"
+//#include "Matrix.hpp"
 
 int main()
 {
@@ -20,18 +22,11 @@ int main()
 
     // std::cout << m1 * m2;
 
+     //Vector3_row v1 {{2,3,5}};
+     //std::cout << v1 * 2
 
-    float x = 2;
-    float y = 3;
-    float z = 4;
-
-
-    Vector3_row v1{{x,y,z}};
-    Vector3_row v2{{x+2,y+2,z+2}};
-
-    Vector3_row v3 =  v1 - v2;
-
-    std::cout << v3;  
+    
+      
     // Vector3_row v{{x,y,z}};
 
     // std::cout << v[0][1]; 
@@ -44,6 +39,23 @@ int main()
     // m1.z_RotMatrix(30);
     // //m1.x_RotMatrix(30);
     // std::cout << m1;
+
+
+    const Vector3_row  a = Vector3_row{{5.0,6.0,0.0}}; //начало 
+    const Vector3_row  b = Vector3_row{{-0.6401844, -0.76822128, 0.0}}; // направление
+
+    Ray ab(a,b); // Луч 
+    Sphere shar(0,0,0,2);
     
+    std::optional<Vector3_row> opt_vec = shar.beam_intersection(ab);
+    if(opt_vec)
+    {
+         std::cout << "Значение задано: " << *opt_vec << std::endl;
+    }
+    else
+    {
+       std::cout << "Значение не задано" << std::endl;
+    }
+
     return 0;
 }

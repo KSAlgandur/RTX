@@ -26,3 +26,13 @@ float Ray::ray_length()
         
     return std::sqrt(dx * dx + dy * dy + dz * dz);
 }
+
+double Ray::norm(const Vector3_row& v)
+{
+     return std::sqrt(v[0][0] * v[0][0] + v[0][1] * v[0][1] + v[0][2] * v[0][2]);
+}
+
+ double Ray::dot(const Vector3_row& v1,const Vector3_row& v2)
+{
+    return v1[0][0] * v2[0][0] + v1[0][1] * v2[0][1] + v1[0][2] * v2[0][2];
+}

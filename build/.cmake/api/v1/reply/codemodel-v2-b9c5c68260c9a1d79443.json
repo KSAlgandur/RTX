@@ -6,6 +6,10 @@
 			[
 				{
 					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
@@ -13,6 +17,21 @@
 					},
 					"projectIndex" : 0,
 					"source" : ".",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "LinearAlg_libs",
+					"jsonFile" : "directory-LinearAlg_libs-Debug-8129accbf16801bf470c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "LinearAlg_libs",
 					"targetIndexes" : 
 					[
 						0
@@ -25,21 +44,30 @@
 				{
 					"directoryIndexes" : 
 					[
-						0
+						0,
+						1
 					],
 					"name" : "rtx",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
 			"targets" : 
 			[
 				{
+					"directoryIndex" : 1,
+					"id" : "LinearAlg_libs::@a7bebfd3968d97da7d10",
+					"jsonFile" : "target-LinearAlg_libs-Debug-9022e616435aaa75ae66.json",
+					"name" : "LinearAlg_libs",
+					"projectIndex" : 0
+				},
+				{
 					"directoryIndex" : 0,
 					"id" : "rtx::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-rtx-Debug-f0881c0e122f11dae6a2.json",
+					"jsonFile" : "target-rtx-Debug-228735104d94340278d3.json",
 					"name" : "rtx",
 					"projectIndex" : 0
 				}

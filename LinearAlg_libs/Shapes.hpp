@@ -1,111 +1,85 @@
 #include "Ray.hpp"
+#include "optional"
+
 
 class Shape
 {
     public:
-    Shape(float x, float y, float z): x_c(x), y_c(y),z_c(z){};
-    virtual bool beam_is_intersect(Ray& beam,const Vector3_row& ray_origin,const Vector3_row& ray_direction) const = 0;
-    virtual Vector3_row beam_intersection(Ray& beam) const = 0;
+    Shape(double x, double y, double z): x_c(x), y_c(y),z_c(z){};
+    virtual std::optional<Vector3_row> beam_intersection(Ray& beam) const = 0;
     protected:
-    float x_c, y_c, z_c;
+    double x_c, y_c, z_c;
 };
 
 class Sphere : public Shape
 {
     public: 
-        Sphere(float x, float y, float z, float r): Shape(x,y,z),radius(r)
+        Sphere(double x, double y, double z, double r): Shape(x,y,z),radius(r)
         {
-            Vector3_row C{{x,y,z}}; //Центр сферы
-            Center = C;
+            //Vector3_row Center{{x,y,z}}; //Центр сферы
+            Center = Vector3_row{{x,y,z}};
         }
 
-        bool beam_is_intersect(Ray &beam,const Vector3_row& ray_origin,const Vector3_row& ray_direction)
+        std::optional<Vector3_row> beam_intersection(Ray &beam)const override
         {
-            Vector3_row L = Center - ray_origin;
-            float tca = Vector3_row::dot(L,ray_direction);
-            if (tca < 0) return false;
-            float d2 = Vector3_row::dot(L,L) - tca * tca;
-            if (d2 > radius * radius) return false;
-            float thc = sqrtf(radius * radius - d2);
-            t1 = tca - thc;
-            t2 = tca + thc;
-            return true; 
+            auto ray_origin = beam.getOrigin();
+            auto ray_direction = beam.getDirection();    
+            double t1 = 0.0;
+            double t2 = 0.0;
+        
 
-        }
 
-        Vector3_row beam_intersection(Ray &beam)
-        {
-            const Vector3_row& ray_origin = beam.getOrigin();
-            const Vector3_row& ray_direction = beam.getDirection();
+            Vector3_row L =  ray_origin - Center;
+            std::cout << std::setprecision(3) << L << std::endl;
+            double B = Ray::dot(ray_direction,L);
+            
+            std::cout <<"B "<<std::setprecision(3) << B << std::endl;
 
-            if(beam_is_intersect(beam,ray_origin,ray_direction)) // если true то есть как минимум одно пересечение 
+            
+            double C = Ray::norm(L) * Ray::norm(L) - radius * radius;
+
+            std::cout << std::setprecision(3) << C << std::endl;
+            double D = B * B - C;
+
+            std::cout << std::setprecision(3) << D << std::endl;
+             std::cout <<"B*B " << std::setprecision(3) << B*B << std::endl;
+
+
+            if(D < 0) 
             {
-                if(t1 > 0 && t2 > 0) // Выбираем наименьшую (ближайшую)    
-                    if(t1 < t2)
+                return std::nullopt; 
+            }
+            else
+                {
+                    t1 = -B - sqrt(D);
+                    t2 = -B + sqrt(D);
+                    
+                    if(t1 > 0 && t2 > 0)
                     {
-                        return ray_origin + ray_direction * t1;
+                        double t = std::min(t1,t2);
+                        return ray_origin + ray_direction.scale(t);
+                    }
+                    else if(t1 > 0)
+                    {
+                        return ray_origin + ray_direction.scale(t1);
+                    }
+                     else if(t2 > 0)
+                    {
+                        return ray_origin + ray_direction.scale(t2);
                     }
                     else
                     {
-                        return ray_origin + ray_direction * t2;
+                        return std::nullopt;
                     }
-                else if(t1 > 0)
-                {
-                    return ray_origin + ray_direction * t1;
+                    
                 }
-                else if(t2 > 0)
-                {
-                   return ray_origin + ray_direction * t2; 
-                }
-            }
-            else {
-            // Обе точки отрицательны, пересечения нет
-            return Vector3_row(0, 0, 0);
-            
 
         }
 
-
-
-
     private:
-        float radius; 
+        double radius; 
         Vector3_row Center;
-        Vector3_row Intersect;
 
-        float t1 = 0;
-        float t2 = 0;
+       
 };
 
-// Vector3 intersect_ray_point(const Vector3& origin, const Vector3& direction) const {
-//         Vector3 L = center - origin;
-//         float tca = L.dot(direction);
-//         float d2 = L.dot(L) - tca * tca;
-//         if (d2 > radius * radius) {
-//             // Луч не пересекает сферу
-//             return Vector3(0, 0, 0);
-//         }
-//         float thc = sqrt(radius * radius - d2);
-//         float t0 = tca - thc;
-//         float t1 = tca + thc;
-//         if (t0 > 0 && t1 > 0) {
-//             // Обе точки положительны, выбираем ближайшую
-//             if (t0 < t1) {
-//                 // t0 ближе к началу луча
-//                 return origin + direction * t0;
-//             } else {
-//                 // t1 ближе к началу луча
-//                 return origin + direction * t1;
-//             }
-//         } else if (t0 > 0) {
-//             // Только t0 положительно, луч касается сферы
-//             return origin + direction * t0;
-//         } else if (t1 > 0) {
-//             // Только t1 положительно, луч касается сферы
-//             return origin + direction * t1;
-//         } else {
-//             // Обе точки отрицательны, пересечения нет
-//             return Vector3(0, 0, 0);
-//         }
-//     }
-// };

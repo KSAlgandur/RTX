@@ -30,6 +30,10 @@ public:
 
     Matrix(std::initializer_list<std::initializer_list<T>> list);
 
+    // //пользовательские типы
+    // typedef Matrix<double, 3, 1> Vector3_col;
+    // typedef Matrix<double, 1, 3> Vector3_row;
+
     // Методы
     void displayMatrix() const;
     size_t GetRow() const;
@@ -39,17 +43,25 @@ public:
     T det();
     Matrix<T, Colums, Rows> inverse();
     T alg_complement(const size_t row,const size_t col);
+    void scale_(const T& scalar);
+    Matrix<T, Rows, Colums> scale(const T& scalar);
+    T dot(const Matrix<T, Rows, Colums>& other) const;
     void y_RotMatrix(const double& angle);
     void x_RotMatrix(const double& angle);
     void z_RotMatrix(const double& angle);
 
+    
+    
+
     // Перегрузки
     Matrix<T, Rows, Colums> &operator=(const Matrix<T, Rows, Colums> &m2);
     Matrix<T, Rows, Colums> &operator+=(const Matrix<T, Rows, Colums> &m2);
+    Matrix<T, Rows, Colums> &operator-=(const Matrix<T, Rows, Colums> &m2);
     std::array<T, Colums> &operator[](size_t i);             // возвращать ссылку на элемент c помощью []
     const std::array<T, Colums> &operator[](size_t i) const; // возщвращать ссылку на элемент c помощью []  для константных объектов
     T &operator()(size_t i, size_t j);                       // возщвращать ссылку на элемент c помощью ()
-    Matrix<T, Rows, Colums> operator*(const T val);          // умножение матрицы на число ;
+    Matrix<T, Rows, Colums> operator*(const T scalar);       // умножение матрицы на число ;
+
 
 };
 
@@ -155,6 +167,8 @@ bool Matrix<T, Rows, Colums>::can_multiply(const Matrix<T, Rows, Colums> &other)
 template <class T, size_t Rows, size_t Colums>
 Matrix<T, Colums, Rows> Matrix<T, Rows, Colums>::transposed()
 {
+
+
     Matrix<T, Colums, Rows> trans_m;
 
     for (size_t i = 0; i < Rows; i++)
@@ -173,7 +187,7 @@ T Matrix<T,Rows,Colums>::det(){
     const double EPS = 1E-9;
     double det = 1;
 
-     static_assert(Colums == Rows, "Matrices do not match in size");
+    static_assert(Colums == Rows, "Matrices do not match in size");
 
     if(Rows < 1) std::cout << "Определитель вычислить невозможно!" << std::endl;
     if(Rows == 1)
@@ -247,6 +261,46 @@ T Matrix<T,Rows,Colums>::alg_complement(const size_t row,const size_t col)
 
     return (pow(-1,row + col) * minor.det());
 }
+template <typename T, size_t Rows, size_t Colums>
+void Matrix<T, Rows, Colums>::scale_(const T& scalar)
+{
+    for (size_t i = 0; i < Rows; i++)
+    {
+        for (size_t j = 0; j < Colums; j++)
+        {
+            data[i][j] *= scalar;
+        }
+    }
+}
+
+template <typename T, size_t Rows, size_t Colums>
+Matrix<T, Rows, Colums> Matrix<T, Rows, Colums>::scale(const T& scalar)
+{
+    Matrix<T, Rows, Colums> res;
+    for (size_t i = 0; i < Rows; i++)
+    {
+        for (size_t j = 0; j < Colums; j++)
+        {
+            res.data[i][j] = data[i][j] * scalar;
+        }
+    }
+    return res;
+}
+
+
+template <typename T, size_t Rows, size_t Colums>
+T Matrix<T, Rows, Colums>::dot(const Matrix<T, Rows, Colums>& other) const
+{
+    auto result = 0;
+    for (size_t i = 0; i < Rows; i++)
+    {
+         result += data[0][i] * other.data[0][i];
+        
+    }
+    return result;
+}
+
+
 
 template<typename T,size_t Rows, size_t Colums>
 Matrix<T, Colums, Rows> Matrix<T, Rows, Colums>::inverse()
@@ -325,7 +379,24 @@ Matrix<T, Rows, Colums> &Matrix<T, Rows, Colums>::operator=(const Matrix<T, Rows
 template <typename T, size_t Rows, size_t Colums>
 Matrix<T, Rows, Colums> &Matrix<T, Rows, Colums>::operator+=(const Matrix<T, Rows, Colums> &m2)
 {
-    if (Rows != m2.row || Colums != m2.col)
+    // if (Rows != m2.row || Colums != m2.col)
+    // {
+    //     throw std::invalid_argument("Matrices have different size!");   // перегрузить
+    // }
+    //else
+        for (size_t i = 0; i < Rows; i++)
+        {
+            for (size_t j = 0; j < Colums; j++)
+            {
+                data[i][j] += m2.data[i][j];
+            }
+        }
+    return *this;
+}
+template <typename T, size_t Rows, size_t Colums> // для векторов
+Matrix<T, Rows, Colums> &Matrix<T, Rows, Colums>::operator-=(const Matrix<T, Rows, Colums> &m2)
+{
+    if ( this->GetCol() != m2.GetCol())
     {
         throw std::invalid_argument("Matrices have different size!");
     }
@@ -334,11 +405,14 @@ Matrix<T, Rows, Colums> &Matrix<T, Rows, Colums>::operator+=(const Matrix<T, Row
         {
             for (size_t j = 0; j <= Colums; j++)
             {
-                data[i][j] += m2.data[i][j];
+                data[i][j] -= m2.data[i][j];
             }
         }
-    return this;
+    return *this;
 }
+
+
+
 
 template <typename T, size_t Rows, size_t Colums>
 std::array<T, Colums> &Matrix<T, Rows, Colums>::operator[](size_t i) // возщвращать ссылку на элемент c помощью []
@@ -359,13 +433,13 @@ T &Matrix<T, Rows, Colums>::operator()(size_t i, size_t j) // возщвраща
 }
 
 template <typename T, size_t Rows, size_t Colums>
-Matrix<T, Rows, Colums> Matrix<T, Rows, Colums>::operator*(const T val) // умножение матрицы на число
+Matrix<T, Rows, Colums> Matrix<T, Rows, Colums>::operator*(const T scalar) // умножение матрицы на число
 {
     for (size_t i = 0; i < Rows; i++)
     {
         for (size_t j = 0; j < Colums; j++)
         {
-            data[i][j] *= val;
+            data[i][j] *= scalar;
         }
     }
     return *this;
@@ -399,6 +473,17 @@ Matrix<T, Rows, Colums> operator+(const Matrix<T, Rows, Colums> &m1, const Matri
 
     return tmp;
 }
+template <class T, size_t Rows, size_t Colums>
+Matrix<T, Rows, Colums> operator-(const Matrix<T, Rows, Colums> &m1, const Matrix<T, Rows, Colums> &m2) // перегрузка оператора сложения без дублирования кода за счет прегрузка +-
+{
+    auto tmp = m1;
+    tmp -= m2;
+
+    return tmp;
+}
+
+
+
 
 template <class T, size_t Rows_1, size_t Colums_1, size_t Rows_2, size_t Colums_2>
 Matrix<T, Rows_1, Colums_2> operator*(const Matrix<T, Rows_1, Colums_1> &m1, const Matrix<T, Rows_2, Colums_2> &m2)

@@ -3,5 +3,10 @@
   "directory": "/home/brlk/VSCode_files/RTX/build",
   "command": "/usr/bin/c++ -I/home/brlk/VSCode_files/RTX/LinearAlg_libs -g -o CMakeFiles/rtx.dir/main.cpp.o -c /home/brlk/VSCode_files/RTX/main.cpp",
   "file": "/home/brlk/VSCode_files/RTX/main.cpp"
+},
+{
+  "directory": "/home/brlk/VSCode_files/RTX/build",
+  "command": "/usr/bin/c++ -I/home/brlk/VSCode_files/RTX/LinearAlg_libs -g -o LinearAlg_libs/CMakeFiles/LinearAlg_libs.dir/Ray.cpp.o -c /home/brlk/VSCode_files/RTX/LinearAlg_libs/Ray.cpp",
+  "file": "/home/brlk/VSCode_files/RTX/LinearAlg_libs/Ray.cpp"
 }
 ]
